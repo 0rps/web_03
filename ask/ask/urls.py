@@ -18,11 +18,11 @@ from django.contrib import admin
 from qa.views import return_404, test
 
 urlpatterns = [
-    url(r'^$', return_404),
+    url(r'^$', test),
     url(r'^question/([0-9]+)/$', test),
-    url(r'^login/$', return_404),
-    url(r'^signup/$', return_404),
-    url(r'^ask/$', return_404),
-    url(r'^polular/$', return_404),
-    url(r'^new/$', return_404),
+    url(r'^login/$', test),
+    url(r'^signup/$', test),
+    url(r'^ask/$', test),
+    url(r'^popular/$', test),
+    url(r'^new/$', test),
 ]
