@@ -1,7 +1,7 @@
 from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage
-from qa.models import Question
+from qa.models import Question, Answer
 from django.shortcuts import render
 from django.template import RequestContext
 
@@ -69,10 +69,13 @@ def question(request, slug):
         raise Http404
 
     try:
-        question = Question.objects.get(pk=pk)
+        q = Question.objects.get(pk=pk)
     except ObjectDoesNotExist:
         raise Http404
 
+    answers = Answer.objects.filter(question=q).all()
+
     return render(request,
                   'question_template.html',
-                  {'q': question})
+                  {'q': q,
+                   'answers': answers})

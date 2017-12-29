@@ -6,8 +6,16 @@
 </head>
 <body>
 
+<div>Question </div>
 <div>{{ q.title }}</div>
 <div>{{ q.text }}</div>
+<br>
+
+<div>Answers</div>
+{% for a in answers %}
+    <div>a.text</div><br>
+{% endfor %}
+
 
 </body>
 </html>
