@@ -16,13 +16,14 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 from qa.views import return_404, test
+from qa import views
 
 urlpatterns = [
-    url(r'^$', test),
-    url(r'^question/([0-9]+)/$', test),
+    url(r'^$', views.recent),
+    url(r'^question/([0-9]+)/$', views.question),
     url(r'^login/$', test),
     url(r'^signup/$', test),
     url(r'^ask/$', test),
-    url(r'^popular/$', test),
+    url(r'^popular/$', views.popular),
     url(r'^new/$', test),
 ]

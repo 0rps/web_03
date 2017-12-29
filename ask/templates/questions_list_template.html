@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Questions list</title>
+</head>
+<body>
+{% for q in p.object_list %}
+    <div style="border: 1px solid gray">
+        <div>
+           <a href="question/{{ q.pk }}/">{{ q.title }}</a>
+        </div>
+
+        <div>
+            {{ q.text }}
+        </div>
+    </div>
+{% endfor %}
+
+<div>
+    {% if p.has_previous  %}
+        <a href="{{ paginator.baseurl }}{{ p.previous_page_number }}">{{ p.previous_page_number }}</a>
+    {% endif %}
+
+    {{ p.number }}
+
+    {% if p.has_next  %}
+        <a href="{{ paginator.baseurl }}{{ p.next_page_number }}">{{ p.next_page_number }}</a>
+    {% endif %}
+</div>
+</body>
+</html>
