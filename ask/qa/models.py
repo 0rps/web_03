@@ -9,15 +9,15 @@ class Question(models.Model):
     text = models.TextField()
     added_at = models.DateField()
     rating = models.IntegerField()
-    author = models.ForeignKey(User)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
     likes = models.ManyToManyField(User)
 
 
 class Answer(models.Model):
     text = models.TextField()
     added_at = models.DateField()
-    question = models.ForeignKey(Question)
-    author = models.ForeignKey(User)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='+')
 
 
 class QuestionManager:
