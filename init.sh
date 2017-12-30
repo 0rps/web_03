@@ -1,5 +1,7 @@
 #!/bin/bash
 
+./create_db
+
 cur_path=`pwd`
 sudo rm /etc/nginx/sites-enabled/default
 sudo rm /etc/nginx/sites-enabled/nginx.conf

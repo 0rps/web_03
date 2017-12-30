@@ -15,11 +15,10 @@ def return_404(request, *args, **kwargs):
 
 
 def recent(request):
-    if 'page' not in request.GET:
-        return HttpResponseBadRequest()
+    page = request.GET.get('page') or 1
 
     try:
-        page = int(request.GET.get('page'))
+        page = int(page)
     except ValueError:
         raise Http404
 
@@ -39,11 +38,10 @@ def recent(request):
 
 
 def popular(request):
-    if 'page' not in request.GET:
-        return HttpResponseBadRequest()
+    page = request.GET.get('page') or 1
 
     try:
-        page = int(request.GET.get('page'))
+        page = int(page)
     except ValueError:
         raise Http404
 
