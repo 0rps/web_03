@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New question</title>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <button type="submit">Ask</button>
+    </form>
+</head>
+<body>
+
+</body>
+</html>

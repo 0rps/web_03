@@ -17,5 +17,16 @@
 {% endfor %}
 
 
+<br><br>
+<div>
+    <p>Add answer:</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{ form }}
+        <br>
+        <button type="submit">Answer</button>
+    </form>
+</div>
+
 </body>
 </html>

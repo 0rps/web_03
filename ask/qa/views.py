@@ -1,7 +1,9 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest, HttpResponseRedirect
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage
+from django.views.decorators.csrf import csrf_protect
 from qa.models import Question, Answer
+from qa.forms import AskForm, AnswerForm
 from django.shortcuts import render
 from django.template import RequestContext
 
@@ -60,6 +62,7 @@ def popular(request):
                    'paginator': paginator})
 
 
+@csrf_protect
 def question(request, slug):
     try:
         pk = int(slug)
@@ -71,9 +74,29 @@ def question(request, slug):
     except ObjectDoesNotExist:
         raise Http404
 
-    answers = Answer.objects.filter(question=q).all()
+    if request.method == 'POST':
+        form = AnswerForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/question/%s/' % pk)
+    else:
+        form = AnswerForm(initial={'question': pk})
 
+    answers = Answer.objects.filter(question=q).all()
     return render(request,
                   'question_template.html',
                   {'q': q,
+                   'form': form,
                    'answers': answers})
+
+
+@csrf_protect
+def ask(request):
+    if request.method == 'POST':
+        form = AskForm(request.POST)
+        if form.is_valid():
+            q = form.save()
+            return HttpResponseRedirect('/question/%s/' % q.pk)
+    else:
+        form = AskForm()
+    return render(request, 'ask_template.html', {'form': form})
