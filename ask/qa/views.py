@@ -46,13 +46,13 @@ def popular(request):
         raise Http404
 
     limit = 10
-    paginator = Paginator(Question.objects.popular, limit)
+    paginator = Paginator(Question.objects.popular(), limit)
     paginator.baseurl = 'popular/?page='
 
     try:
         page = paginator.page(page)
     except EmptyPage:
-        page = paginator.page(paginator.num_pages)
+        page = paginator.page(max(paginator.num_pages-1, 0))
 
     return render(request,
                   'questions_list_template.html',
