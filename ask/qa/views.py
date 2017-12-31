@@ -1,9 +1,11 @@
-from django.http import HttpResponse, HttpResponseNotFound, Http404, HttpResponseBadRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseNotFound, \
+    Http404, HttpResponseBadRequest, HttpResponseRedirect, HttpResponseForbidden
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage
 from django.views.decorators.csrf import csrf_protect
+from django.contrib.auth import login as auth_login
 from qa.models import Question, Answer
-from qa.forms import AskForm, AnswerForm
+from qa.forms import AskForm, AnswerForm, SignupForm, LoginForm
 from django.shortcuts import render
 from django.template import RequestContext
 
@@ -75,7 +77,10 @@ def question(request, slug):
         raise Http404
 
     if request.method == 'POST':
+        if request.user.is_authenticated is False:
+            return HttpResponseForbidden()
         form = AnswerForm(request.POST)
+        form._user = request.user
         if form.is_valid():
             form.save()
             return HttpResponseRedirect('/question/%s/' % pk)
@@ -93,10 +98,45 @@ def question(request, slug):
 @csrf_protect
 def ask(request):
     if request.method == 'POST':
+        if request.user.is_authenticated is False:
+            return HttpResponseForbidden()
         form = AskForm(request.POST)
+        form._user = request.user
         if form.is_valid():
             q = form.save()
             return HttpResponseRedirect('/question/%s/' % q.pk)
     else:
         form = AskForm()
     return render(request, 'ask_template.html', {'form': form})
+
+
+@csrf_protect
+def signup(request):
+    if request.method == 'POST':
+        form = SignupForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            auth_login(request, user)
+            return HttpResponseRedirect('/')
+    else:
+        form = SignupForm()
+
+    return render(request, 'signup_template.html', {'form': form})
+
+
+@csrf_protect
+def login(request):
+    error = None
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = form.login()
+            if user is None:
+                error = 'Wrong username or password'
+            else:
+                return HttpResponseRedirect('/')
+    else:
+        form = LoginForm()
+
+    return render(request, 'login_template.html', {'form': form, 'error': error})
+
